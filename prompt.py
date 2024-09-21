@@ -16,7 +16,7 @@ def page_two():
     st.session_state.prompt = f"Generate an anime character based on the following description.Gender Description:{gender}, Facial Description: {facial}, Hair Description: {hair}, Body-type: {body_type}, Clothing Description: {clothing}, Age: {age}, Complexion: {complexion}, Ethnicity: {ethnicity}"
     
     if st.button("Next"):
-        st.session_state=3
+        st.session_state.page=3
         
         
     

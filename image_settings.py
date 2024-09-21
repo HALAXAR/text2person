@@ -11,7 +11,7 @@ def page_three():
     width = 1024
     height = 1024
     enhance_options = [True,False]
-    enhance = st.selectbox("Do you want to enhance the promot", options=enhance_options)
+    enhance = st.selectbox("Do you want to enhance the prompt", options=enhance_options)
 
     st.session_state.url = f"https://image.pollinations.ai/prompt/{prompt}?model={model_selected}&width={width}&height={height}&nologo=true&enhance={enhance}"
     if st.button("Next"):
