@@ -1,85 +1,26 @@
-import requests
-import json
 import streamlit as st
-
-api_key=st.text_input("Enter your api key: ")
-
-facial = st.text_input("Explain facial features of your avatar:")
-hair = st.text_input("Hair description:")
-body_type = st.text_input("Explain the body type:")
-clothing = st.text_input("Explain the clothing:")
-age = st.text_input("Enter the age/age-group:")
-complexion = st.text_input("Describe the complexion of your character:")
-ethnicity = st.text_input("Enter the ethnicity:")
-
-# Create the prompt for the image generation
-prompt = f"Generate an anime character based on the following description. Facial Description: {facial}, Hair Description: {hair}, Body-type: {body_type}, Clothing Description: {clothing}, Age: {age}, Complexion: {complexion}, Ethnicity: {ethnicity}"
+from about import page_one
+from prompt import page_two
+from image_settings import page_three
+from endpoint import page_four
 
 
-url = "https://modelslab.com/api/v6/images/text2img"
+def main():
+    if 'page' not in st.session_state:
+        st.session_state.page = 1
+    if 'prompt' not in st.session_state:
+        st.session_state.prompt = "Confused person"
+    if 'url' not in st.session_state:
+        st.session_state.url = f"https://image.pollinations.ai/prompt/{st.session_state.prompt}?model=flux&width=1024&height=1024&nologo=true&enhance=True"
 
-payload = json.dumps({
-  "key": api_key,
-  "model_id": "midjourney",
-  "prompt": prompt,
-  "negative_prompt": "",
-  "width": "512",
-  "height": "512",
-  "samples": "1",
-  "num_inference_steps": "30",
-  "safety_checker": "no",
-  "enhance_prompt": "yes",
-  "seed": None,
-  "guidance_scale": 7.5,
-  "panorama": "no",
-  "self_attention": "no",
-  "upscale": "no",
-  "embeddings_model": None,
-  "lora_model": None,
-  "tomesd": "yes",
-  "use_karras_sigmas": "yes",
-  "vae": None,
-  "lora_strength": None,
-  "scheduler": "DDPMScheduler",
-  "webhook": None,
-  "track_id": None
-})
+    if st.session_state.page == 1:
+        page_one()
+    elif st.session_state.page == 2:
+        page_two()
+    elif st.session_state.page == 3:
+        page_three()
+    elif st.session_state.page == 4:
+        page_four()
 
-headers = {
-  'Content-Type': 'application/json'
-}
-if st.button("Generate Image"):
-    st.title("Generated Image")
-    response = requests.request("POST", url, headers=headers, data=payload)
-
-    response=response.text
-    # print(response)
-    data = json.loads(response)
-
-    # Access the "output" field
-    output_links = data["output"]
-
-    # Check if the "output" array has at least one link
-    if output_links:
-        first_link = output_links[0]
-        print("First Output Link:", first_link)
-    else:
-        print("No links found in 'output'.")
-
-    def download_image(url, filename):
-      response = requests.get(url)
-
-    # Check if the request was successful (status code 200)
-      if response.status_code == 200:
-      # Open a file in write-binary mode and save the content
-        with open(filename, 'wb') as file:
-          file.write(response.content)
-          print(f"Image successfully downloaded: {filename}")
-      else:
-        print(f"Failed to retrieve image. Status code: {response.status_code}")
-
-    # Example usage
-    filename = "downloaded_image.jpg"  # The name to save the image as
-
-    download_image(first_link, filename)
-    st.image('downloaded_image.jpg')
+if __name__ == '__main__':
+    main()
