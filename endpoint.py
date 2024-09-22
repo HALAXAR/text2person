@@ -1,21 +1,16 @@
 import streamlit as st
 import requests
-
+from io import BytesIO
 
 def download(image_url):
     response = requests.get(image_url)
-    with open('image.jpg', 'wb') as file:
-        file.write(response.content)
-    print('Download Completed')
-
+    return BytesIO(response.content)
 
 def page_four():
-    st.set_page_config(
-        page_title = "Generated Image"
-    )
-    image_url = st.session_state.url
-    download(image_url)
     st.title("Generated Image")
-    st.image("image.jpg")
+    image_url = st.session_state.url
+    image_data = download(image_url)
+    st.image(image_data)
+    
     if st.button("Return to HomePage"):
-        st.session_state.page=1
+        st.session_state.page = 1
